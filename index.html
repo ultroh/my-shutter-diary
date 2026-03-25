@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #fafafa; /* 사진이 돋보이는 차분한 화이트 톤 */
+            background-color: #fafafa;
             color: #333;
         }
 
@@ -42,15 +42,15 @@
         }
 
         nav a:hover {
-            color: #000; /* 마우스 오버 시 진하게 변경 */
+            color: #000;
         }
 
         /* 반응형 사진 그리드 레이아웃 */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            grid-auto-rows: 400px; /* 사진들의 높이를 일정하게 맞춤 */
-            gap: 15px; /* 사진 사이의 간격 */
+            grid-auto-rows: 400px;
+            gap: 15px;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px 60px;
@@ -60,20 +60,19 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #eee; /* 이미지 로딩 전 배경색 */
+            background-color: #eee;
         }
 
-        /* 사진 핏 및 호버(Hover) 애니메이션 */
         .gallery-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 비율이 깨지지 않게 영역을 꽉 채움 */
-            transition: transform 0.6s ease; /* 부드러운 애니메이션 효과 */
-            cursor: pointer;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+            cursor: pointer; /* 클릭 가능하다는 표시 */
         }
 
         .gallery-item:hover img {
-            transform: scale(1.04); /* 마우스 오버 시 사진이 살짝 커짐 */
+            transform: scale(1.04);
         }
 
         /* 모바일 화면 대응 */
@@ -84,6 +83,48 @@
             .gallery {
                 grid-auto-rows: 300px;
             }
+        }
+
+        /* === 라이트박스(Lightbox) 스타일 추가 === */
+        #lightbox {
+            display: none; /* 평소에는 숨겨둠 */
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* 반투명한 검은색 배경 */
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease; /* 부드럽게 나타나는 효과 */
+        }
+
+        #lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        #lightbox .close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        #lightbox .close:hover {
+            color: #ccc;
         }
     </style>
 </head>
@@ -107,5 +148,36 @@
         <div class="gallery-item"><img src="https://picsum.photos/id/338/600/800" alt="포트폴리오 사진 6"></div>
     </main>
 
+    <div id="lightbox">
+        <span class="close">&times;</span>
+        <img id="lightbox-img" src="" alt="확대된 사진">
+    </div>
+
+    <script>
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const images = document.querySelectorAll('.gallery-item img');
+        const closeBtn = document.querySelector('.close');
+
+        // 각 사진을 클릭했을 때 라이트박스 열기
+        images.forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src; // 클릭한 사진의 주소를 라이트박스 사진 주소로 복사
+                lightbox.classList.add('active'); // 라이트박스 표시
+            });
+        });
+
+        // X 버튼을 클릭했을 때 라이트박스 닫기
+        closeBtn.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        // 사진 바깥의 어두운 배경을 클릭했을 때도 라이트박스 닫기
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
