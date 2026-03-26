@@ -30,7 +30,7 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             margin-bottom: 20px;
-            white-space: nowrap; /* 글자가 줄바꿈되지 않도록 강제 */
+            white-space: nowrap;
         }
 
         nav a {
@@ -42,8 +42,9 @@
             transition: color 0.3s ease;
         }
 
-        nav a:hover {
+        nav a:hover, nav a.active {
             color: #000;
+            font-weight: 500;
         }
 
         /* 반응형 사진 그리드 레이아웃 */
@@ -83,20 +84,17 @@
             }
             
             header h1 {
-                /* 모바일 화면 비율에 맞춰 폰트 크기를 줄이고, 자간을 조정하여 한 줄에 표시되도록 설정 */
                 font-size: 6vw; 
                 letter-spacing: 2px;
             }
 
             nav a {
-                margin: 0 8px; /* 모바일에서 메뉴 간격 축소 */
+                margin: 0 8px;
                 font-size: 12px;
             }
 
             .gallery {
-                /* 모바일에서 2열로 배치되도록 수정 */
                 grid-template-columns: repeat(2, 1fr);
-                /* 사진이 2열이 될 때 너무 길쭉해지지 않도록 높이 조절 */
                 grid-auto-rows: 200px; 
                 gap: 10px;
             }
@@ -150,19 +148,20 @@
     <header>
         <h1>My Shutter Diary</h1>
         <nav>
-            <a href="portfolio.html" target="_blank">PORTFOLIO</a>
-            <a href="about.html" target="_blank">ABOUT</a>
-            <a href="contact.html" target="_blank">CONTACT</a>
+            <a href="index.html" class="active">PORTFOLIO</a>
+            <a href="about.html">ABOUT</a>
+            <a href="contact.html">CONTACT</a>
         </nav>
     </header>
-<main class="gallery">
-    <div class="gallery-item"><img src="images/DSC07320.JPG" alt="포트폴리오 사진 1" width="600"></div>
-    <div class="gallery-item"><img src="images/DSC08446.jpg" alt="포트폴리오 사진 2" width="600"></div>
-    <div class="gallery-item"><img src="images/IMG_1234.jpg" alt="포트폴리오 사진 3" width="600"></div>
-    <div class="gallery-item"><img src="images/IMG_2345.JPG" alt="포트폴리오 사진 4" width="600"></div>
-    <div class="gallery-item"><img src="images/IMG_3456.jpg" alt="포트폴리오 사진 5" width="600"></div>
-    <div class="gallery-item"><img src="images/IMG_4225.jpg" alt="포트폴리오 사진 6" width="600"></div>
-</main>
+
+    <main class="gallery">
+        <div class="gallery-item"><img src="images/DSC07320.JPG" alt="포트폴리오 사진 1"></div>
+        <div class="gallery-item"><img src="images/DSC08446.jpg" alt="포트폴리오 사진 2"></div>
+        <div class="gallery-item"><img src="images/IMG_1234.jpg" alt="포트폴리오 사진 3"></div>
+        <div class="gallery-item"><img src="images/IMG_2345.JPG" alt="포트폴리오 사진 4"></div>
+        <div class="gallery-item"><img src="images/IMG_3456.jpg" alt="포트폴리오 사진 5"></div>
+        <div class="gallery-item"><img src="images/IMG_4225.jpg" alt="포트폴리오 사진 6"></div>
+    </main>
 
     <div id="lightbox">
         <span class="close">&times;</span>
@@ -175,20 +174,17 @@
         const images = document.querySelectorAll('.gallery-item img');
         const closeBtn = document.querySelector('.close');
 
-        // 각 사진을 클릭했을 때 라이트박스 열기
         images.forEach(img => {
             img.addEventListener('click', () => {
-                lightboxImg.src = img.src; // 클릭한 사진의 주소를 라이트박스 사진 주소로 복사
-                lightbox.classList.add('active'); // 라이트박스 표시
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
             });
         });
 
-        // X 버튼을 클릭했을 때 라이트박스 닫기
         closeBtn.addEventListener('click', () => {
             lightbox.classList.remove('active');
         });
 
-        // 사진 바깥의 어두운 배경을 클릭했을 때도 라이트박스 닫기
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
                 lightbox.classList.remove('active');
