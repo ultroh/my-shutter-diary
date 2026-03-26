@@ -30,6 +30,7 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             margin-bottom: 20px;
+            white-space: nowrap; /* 글자가 줄바꿈되지 않도록 강제 */
         }
 
         nav a {
@@ -68,37 +69,53 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.6s ease;
-            cursor: pointer; /* 클릭 가능하다는 표시 */
+            cursor: pointer;
         }
 
         .gallery-item:hover img {
             transform: scale(1.04);
         }
 
-        /* 모바일 화면 대응 */
+        /* === 모바일 화면 대응 수정 === */
         @media (max-width: 768px) {
             header {
-                padding: 40px 20px 30px;
+                padding: 40px 10px 30px;
             }
+            
+            header h1 {
+                /* 모바일 화면 비율에 맞춰 폰트 크기를 줄이고, 자간을 조정하여 한 줄에 표시되도록 설정 */
+                font-size: 6vw; 
+                letter-spacing: 2px;
+            }
+
+            nav a {
+                margin: 0 8px; /* 모바일에서 메뉴 간격 축소 */
+                font-size: 12px;
+            }
+
             .gallery {
-                grid-auto-rows: 300px;
+                /* 모바일에서 2열로 배치되도록 수정 */
+                grid-template-columns: repeat(2, 1fr);
+                /* 사진이 2열이 될 때 너무 길쭉해지지 않도록 높이 조절 */
+                grid-auto-rows: 200px; 
+                gap: 10px;
             }
         }
 
-        /* === 라이트박스(Lightbox) 스타일 추가 === */
+        /* === 라이트박스(Lightbox) 스타일 === */
         #lightbox {
-            display: none; /* 평소에는 숨겨둠 */
+            display: none;
             position: fixed;
             z-index: 999;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); /* 반투명한 검은색 배경 */
+            background-color: rgba(0, 0, 0, 0.85);
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.3s ease; /* 부드럽게 나타나는 효과 */
+            transition: opacity 0.3s ease;
         }
 
         #lightbox.active {
@@ -133,9 +150,9 @@
     <header>
         <h1>My Shutter Story</h1>
         <nav>
-            <a href="#">PORTFOLIO</a>
-            <a href="#">ABOUT</a>
-            <a href="#">CONTACT</a>
+            <a href="portfolio.html" target="_blank">PORTFOLIO</a>
+            <a href="about.html" target="_blank">ABOUT</a>
+            <a href="contact.html" target="_blank">CONTACT</a>
         </nav>
     </header>
 
