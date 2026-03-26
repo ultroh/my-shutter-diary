@@ -6,141 +6,85 @@
     <title>Photography Portfolio</title>
     <style>
         /* 기본 설정 및 여백 초기화 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: #fafafa;
             color: #333;
+            line-height: 1.6;
         }
 
-        /* 미니멀한 헤더 및 내비게이션 */
-        header {
-            text-align: center;
-            padding: 60px 20px 40px;
-        }
-
+        /* 헤더 및 내비게이션 */
+        header { text-align: center; padding: 60px 20px 40px; }
         header h1 {
-            font-size: 24px;
-            font-weight: 300;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            white-space: nowrap;
+            font-size: 24px; font-weight: 300; letter-spacing: 4px;
+            text-transform: uppercase; margin-bottom: 20px;
         }
-
         nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: #999;
-            font-size: 13px;
-            letter-spacing: 2px;
-            transition: color 0.3s ease;
+            margin: 0 15px; text-decoration: none; color: #999;
+            font-size: 13px; letter-spacing: 2px; transition: color 0.3s;
+            cursor: pointer;
         }
+        nav a:hover, nav a.active { color: #000; font-weight: bold; }
 
-        nav a:hover, nav a.active {
-            color: #000;
-            font-weight: 500;
-        }
+        /* 컨텐츠 섹션 관리 */
+        .content-section { display: none; max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
+        .content-section.active { display: block; }
 
-        /* 반응형 사진 그리드 레이아웃 */
+        /* === [수정됨] 정사각형 반응형 갤러리 === */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            grid-auto-rows: 400px;
-            gap: 15px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px 60px;
+            /* PC: 최소 250px 크기로 빈 공간 없이 채움 */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px; /* 사진 사이 간격 */
         }
 
         .gallery-item {
             width: 100%;
-            height: 100%;
             overflow: hidden;
             background-color: #eee;
+            /* [핵심] 너비에 맞춰 높이를 자동으로 1:1 비율로 설정 */
+            aspect-ratio: 1 / 1; 
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            /* 원본 사진 비율을 유지하면서 정사각형 틀에 꽉 차게 맞춤 (잘림 발생) */
+            object-fit: cover; 
             transition: transform 0.6s ease;
             cursor: pointer;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.04);
-        }
+        .gallery-item:hover img { transform: scale(1.05); }
 
-        /* === 모바일 화면 대응 수정 === */
+        /* 정보(About) & 연락처(Contact) 스타일 */
+        .text-content { text-align: center; padding: 50px 20px; max-width: 700px; margin: 0 auto; }
+        .text-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
+
+        /* 모바일 대응 */
         @media (max-width: 768px) {
-            header {
-                padding: 40px 10px 30px;
-            }
+            header { padding: 40px 10px 30px; }
+            header h1 { font-size: 6vw; letter-spacing: 2px; }
+            nav a { margin: 0 8px; font-size: 12px; }
             
-            header h1 {
-                font-size: 6vw; 
-                letter-spacing: 2px;
-            }
-
-            nav a {
-                margin: 0 8px;
-                font-size: 12px;
-            }
-
+            /* 모바일: 무조건 2열 배치 */
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
-                grid-auto-rows: 200px; 
                 gap: 10px;
             }
+            /* 모바일에서도 .gallery-item의 aspect-ratio는 유지됨 */
         }
 
-        /* === 라이트박스(Lightbox) 스타일 === */
+        /* 라이트박스 (수정 없음) */
         #lightbox {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            display: none; position: fixed; z-index: 999; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
         }
-
-        #lightbox.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        #lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        #lightbox .close {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        #lightbox .close:hover {
-            color: #ccc;
-        }
+        #lightbox.active { display: flex; opacity: 1; }
+        #lightbox img { max-width: 90%; max-height: 80%; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 40px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -148,27 +92,58 @@
     <header>
         <h1>My Shutter Diary</h1>
         <nav>
-            <a href="index.html" class="active">PORTFOLIO</a>
-            <a href="about.html">ABOUT</a>
-            <a href="contact.html">CONTACT</a>
+            <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
+            <a onclick="showSection('about')" id="link-about">ABOUT</a>
+            <a onclick="showSection('contact')" id="link-contact">CONTACT</a>
         </nav>
     </header>
 
-    <main class="gallery">
-        <div class="gallery-item"><img src="images/DSC07320.JPG" alt="포트폴리오 사진 1"></div>
-        <div class="gallery-item"><img src="images/DSC08446.jpg" alt="포트폴리오 사진 2"></div>
-        <div class="gallery-item"><img src="images/IMG_1234.jpg" alt="포트폴리오 사진 3"></div>
-        <div class="gallery-item"><img src="images/IMG_2345.JPG" alt="포트폴리오 사진 4"></div>
-        <div class="gallery-item"><img src="images/IMG_3456.jpg" alt="포트폴리오 사진 5"></div>
-        <div class="gallery-item"><img src="images/IMG_4225.jpg" alt="포트폴리오 사진 6"></div>
+    <main>
+        <section id="portfolio" class="content-section active">
+            <div class="gallery">
+                <div class="gallery-item"><img src="images/DSC07320.JPG" alt="사진 1"></div>
+                <div class="gallery-item"><img src="images/DSC08446.jpg" alt="사진 2"></div>
+                <div class="gallery-item"><img src="images/IMG_1234.jpg" alt="사진 3"></div>
+                <div class="gallery-item"><img src="images/IMG_2345.JPG" alt="사진 4"></div>
+                <div class="gallery-item"><img src="images/IMG_3456.jpg" alt="사진 5"></div>
+                <div class="gallery-item"><img src="images/IMG_4225.jpg" alt="사진 6"></div>
+                </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <div class="text-content">
+                <h2>About Me</h2>
+                <p>안녕하세요, 찰나의 순간을 기록하는 사진작가입니다.<br>
+                세상의 따뜻한 색감과 이야기를 카메라에 담는 것을 좋아합니다.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="content-section">
+            <div class="text-content">
+                <h2>Contact</h2>
+                <p>Email: your-email@example.com</p>
+                <p>Instagram: @your_id</p>
+                <p>협업 및 촬영 문의는 언제든 환영합니다.</p>
+            </div>
+        </section>
     </main>
 
     <div id="lightbox">
         <span class="close">&times;</span>
-        <img id="lightbox-img" src="" alt="확대된 사진">
+        <img id="lightbox-img" src="" alt="확대 사진">
     </div>
 
     <script>
+        // 1. 섹션 전환 함수
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('link-' + sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 2. 라이트박스 기능
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const images = document.querySelectorAll('.gallery-item img');
@@ -181,14 +156,9 @@
             });
         });
 
-        closeBtn.addEventListener('click', () => {
-            lightbox.classList.remove('active');
-        });
-
+        closeBtn.addEventListener('click', () => lightbox.classList.remove('active'));
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('active');
-            }
+            if (e.target === lightbox) lightbox.classList.remove('active');
         });
     </script>
 </body>
