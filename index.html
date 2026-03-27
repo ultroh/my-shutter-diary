@@ -16,7 +16,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            overflow-y: scroll; /* [추가됨] 항상 세로 스크롤바를 노출하여 화면 흔들림 방지 */
+            overflow-y: scroll; /* 항상 세로 스크롤바 유지 */
         }
 
         /* 헤더 및 내비게이션 */
@@ -57,9 +57,6 @@
             transition: transform 0.6s ease;
             cursor: pointer;
             -webkit-user-drag: none;
-            -khtml-user-drag: none;
-            -moz-user-drag: none;
-            -o-user-drag: none;
         }
 
         .gallery-item:hover img { transform: scale(1.05); }
@@ -79,26 +76,68 @@
             }
         }
 
-        /* 라이트박스 및 사진 설명(Caption) 스타일 */
+        /* [수정됨] 라이트박스 애니메이션 업그레이드 */
         #lightbox {
-            display: none; position: fixed; z-index: 999; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            flex-direction: column; 
-            justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
+            /* display: none 대신 초기 상태를 투명하고 숨겨진 상태로 설정 */
+            position: fixed; z-index: 999; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.95); /* 배경을 조금 더 어둡게 */
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            
+            /* 핵심: 애니메이션 설정 */
+            opacity: 0;             /* 완전히 투명하게 */
+            visibility: hidden;    /* 화면에서 숨김 (클릭 방지) */
+            pointer-events: none;  /* 마우스 이벤트 무시 */
+            transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
+                        visibility 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: opacity, visibility; /* 성능 최적화 */
         }
-        #lightbox.active { display: flex; opacity: 1; }
-        #lightbox img { max-width: 90%; max-height: 80%; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 40px; cursor: pointer; }
+
+        /* [수정됨] 라이트박스 활성화 상태 */
+        #lightbox.active {
+            opacity: 1;             /* 불투명하게 */
+            visibility: visible;   /* 보이게 */
+            pointer-events: auto;   /* 마우스 이벤트 허용 */
+        }
+
+        /* [수정됨] 라이트박스 내부 이미지 애니메이션 효과 */
+        #lightbox img {
+            max-width: 90%; max-height: 80%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            
+            /* 핵심: 등장할 때 살짝 커지는 효과 */
+            transform: scale(0.9); /* 초기 상태: 약간 작게 */
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); /* 더 세련된 easing */
+            will-change: transform;
+        }
+
+        /* [수정됨] 활성화 되었을 때 이미지 크기 복원 */
+        #lightbox.active img {
+            transform: scale(1);   /* 원래 크기로 */
+        }
+
+        .close {
+            position: absolute; top: 30px; right: 40px; color: #fff;
+            font-size: 40px; font-weight: 200; cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .close:hover { transform: scale(1.1); color: #ccc; }
         
         #lightbox-caption {
             color: #ddd;
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 15px;
             font-weight: 300;
             letter-spacing: 1px;
             text-align: center;
             max-width: 80%;
-            line-height: 1.5;
+            line-height: 1.6;
+            
+            /* 캡션도 부드럽게 등장 */
+            opacity: 0;
+            transition: opacity 0.4s ease 0.1s; /* 살짝 늦게 등장 */
+        }
+        #lightbox.active #lightbox-caption {
+            opacity: 1;
         }
     </style>
 </head>
@@ -160,6 +199,7 @@
     </div>
 
     <script>
+        // 섹션 전환 함수 (기존과 동일)
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
@@ -168,23 +208,45 @@
             window.scrollTo(0, 0);
         }
 
+        // 라이트박스 관련 요소
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCaption = document.getElementById('lightbox-caption');
         const images = document.querySelectorAll('.gallery-item img');
         const closeBtn = document.querySelector('.close');
 
+        // 라이트박스 열기
         images.forEach(img => {
             img.addEventListener('click', () => {
                 lightboxImg.src = img.src;
                 lightboxCaption.innerHTML = img.getAttribute('data-caption') || ''; 
-                lightbox.classList.add('active');
+                lightbox.classList.add('active'); // active 클래스만 붙이면 CSS에서 애니메이션 처리
             });
         });
 
-        closeBtn.addEventListener('click', () => lightbox.classList.remove('active'));
+        // 라이트박스 닫기 함수
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            // 애니메이션이 끝난 후(0.5초 뒤) 소스를 비워주는 것이 깔끔함
+            setTimeout(() => {
+                if(!lightbox.classList.contains('active')) {
+                    lightboxImg.src = '';
+                }
+            }, 500);
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        
+        // 배경 클릭 시 닫기
         lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) lightbox.classList.remove('active');
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        // ESC 키 눌렀을 때 닫기 추가
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
         });
     </script>
 </body>
