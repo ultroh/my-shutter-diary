@@ -11,18 +11,20 @@
     <title>Photography Portfolio</title>
 
     <style>
-/* 1. 폰트 불러오기 (CSS 맨 위에 위치) */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+        /* 1. 폰트 불러오기 (CSS 맨 위에 위치) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400&display=swap');
 
 /* 2. 사진 밑 스토리 텍스트에 적용할 스타일 */
 .story-text {
-    /* 프리텐다드를 최우선으로 적용하고, 실패 시 대체 폰트 지정 */
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Helvetica Neue', Arial, sans-serif;
-    font-size: 14px; /* 눈에 거슬리지 않는 적당한 크기 */
-    color: #444444; /* 완전 검은색보다 눈이 덜 피로한 짙은 회색 */
-    line-height: 1.6; /* 줄 간격을 넉넉하게 주어 숨통을 트여줌 */
-    word-break: keep-all; /* ★ 한글 단어가 줄바꿈될 때 중간에 끊기지 않게 보호 */
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 300; /* 얇은 굵기를 사용하여 서정적인 느낌 강조 */
+    font-size: 14px;
+    color: #333333;
+    line-height: 1.7; /* 명조체는 줄 간격이 조금 더 넓은 것이 예쁩니다 */
+    word-break: keep-all;
 }
+
+        
         /* 기본 설정 및 여백 초기화 */
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
