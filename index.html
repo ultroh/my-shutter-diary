@@ -1,524 +1,299 @@
 <!DOCTYPE html>
-
 <html lang="ko">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Photography Portfolio</title>
-
     <style>
         /* 1. 폰트 불러오기 (CSS 맨 위에 위치) */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400&display=swap');
+        @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
-/* 2. 사진 밑 스토리 텍스트에 적용할 스타일 */
-.story-text {
-    font-family: 'Noto Serif KR', serif;
-    font-weight: 300; /* 얇은 굵기를 사용하여 서정적인 느낌 강조 */
-    font-size: 14px;
-    color: #333333;
-    line-height: 1.7; /* 명조체는 줄 간격이 조금 더 넓은 것이 예쁩니다 */
-    word-break: keep-all;
-}
-
-        
-        /* 기본 설정 및 여백 초기화 */
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-
-            font-family: 'Pretendard', sans-serif;
-
-            background-color: #fafafa;
-
-            color: #333;
-
-            line-height: 1.6;
-
-            user-select: none;
-
-            -webkit-user-select: none;
-
-            -moz-user-select: none;
-
-            -ms-user-select: none;
-
-            overflow-y: scroll; /* 항상 세로 스크롤바 유지 */
-
+        /* 2. 사진 밑 스토리 텍스트에 적용할 스타일 */
+        .story-text {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 14px; 
+            color: #444444; 
+            line-height: 1.6; 
+            word-break: keep-all; 
         }
 
-
+        /* 기본 설정 및 여백 초기화 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            line-height: 1.6;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            overflow-y: scroll; /* 항상 세로 스크롤바 유지 */
+        }
 
         /* 헤더 및 내비게이션 */
-
         header { text-align: center; padding: 60px 20px 40px; }
-
+        
+        /* [수정됨] 제목 애니메이션 효과 추가 */
         header h1 {
-
-            font-size: 24px; font-weight: 300; letter-spacing: 4px;
-
-            text-transform: uppercase; margin-bottom: 20px;
-
+            font-size: 26px; 
+            font-weight: 300; 
+            letter-spacing: 4px;
+            text-transform: uppercase; 
+            margin-bottom: 25px;
+            display: inline-block;
+            transition: letter-spacing 0.4s ease, color 0.4s ease;
+            cursor: default;
+        }
+        header h1:hover {
+            letter-spacing: 8px; /* 마우스를 올리면 자간이 넓어짐 */
+            color: #ff7e5f; /* 흑백과 대비되는 따뜻한 포인트 컬러 */
         }
 
+        /* [수정됨] 메뉴 밑줄 애니메이션 효과 추가 */
         nav a {
-
-            margin: 0 15px; text-decoration: none; color: #999;
-
-            font-size: 13px; letter-spacing: 2px; transition: color 0.3s;
-
+            position: relative; /* 가상 요소 기준점 */
+            margin: 0 15px; 
+            text-decoration: none; 
+            color: #999;
+            font-size: 13px; 
+            letter-spacing: 2px; 
+            transition: color 0.3s;
             cursor: pointer;
-
+            padding-bottom: 5px;
+        }
+        
+        /* 메뉴 텍스트 아래 숨겨진 밑줄 생성 */
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #000;
+            transition: width 0.3s ease, left 0.3s ease;
         }
 
         nav a:hover, nav a.active { color: #000; font-weight: bold; }
-
-
+        
+        /* 마우스를 올리거나 활성화 시 밑줄이 중앙에서 양옆으로 늘어남 */
+        nav a:hover::after, nav a.active::after {
+            width: 100%;
+            left: 0;
+        }
 
         /* 컨텐츠 섹션 관리 */
-
         .content-section { display: none; max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
-
         .content-section.active { display: block; }
 
-
-
         /* 정사각형 반응형 갤러리 */
-
         .gallery {
-
             display: grid;
-
             grid-template-columns: repeat(3, 1fr);
-
             gap: 15px; 
-
         }
-
-
 
         .gallery-item {
-
             width: 100%;
-
             overflow: hidden;
-
             background-color: #eee;
-
             aspect-ratio: 1 / 1; 
-
         }
-
-
 
         .gallery-item img {
-
             width: 100%;
-
             height: 100%;
-
             object-fit: cover; 
-
-            /* [수정됨] 흑백 필터 추가 및 부드러운 전환 효과 적용 */
-
             filter: grayscale(100%);
-
             transition: transform 0.6s ease, filter 0.4s ease;
-
             cursor: pointer;
-
             -webkit-user-drag: none;
-
         }
-
-
-
-        /* [수정됨] 마우스를 올렸을 때 원본 색상으로 서서히 복원 (클릭 전 미리보기 효과) */
 
         .gallery-item:hover img { 
-
             transform: scale(1.05); 
-
             filter: grayscale(0%);
-
         }
-
-
 
         /* 정보(About) & 연락처(Contact) 스타일 */
-
         .text-content { text-align: center; padding: 50px 20px; max-width: 700px; margin: 0 auto; }
-
         .text-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
 
-
-
         /* 모바일 대응 */
-
         @media (max-width: 768px) {
-
             header { padding: 40px 10px 30px; }
-
             header h1 { font-size: 6vw; letter-spacing: 2px; }
-
             nav a { margin: 0 8px; font-size: 12px; }
-
             .gallery {
-
                 grid-template-columns: repeat(2, 1fr);
-
                 gap: 10px;
-
             }
-
         }
-
-
 
         /* 라이트박스 애니메이션 업그레이드 */
-
         #lightbox {
-
             position: fixed; z-index: 999; top: 0; left: 0;
-
             width: 100%; height: 100%; background: rgba(0,0,0,0.95); 
-
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-
-            
-
             opacity: 0;             
-
             visibility: hidden;    
-
             pointer-events: none;  
-
             transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
-
                         visibility 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-
             will-change: opacity, visibility; 
-
         }
-
-
-
-        /* 라이트박스 활성화 상태 */
 
         #lightbox.active {
-
             opacity: 1;             
-
             visibility: visible;   
-
             pointer-events: auto;   
-
         }
-
-
-
-        /* 라이트박스 내부 이미지 애니메이션 효과 (이곳은 필터가 없어 기본 원본 색상으로 보입니다) */
 
         #lightbox img {
-
             max-width: 90%; max-height: 80%;
-
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-
-            
-
             transform: scale(0.9); 
-
             transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); 
-
             will-change: transform;
-
         }
-
-
-
-        /* 활성화 되었을 때 이미지 크기 복원 */
 
         #lightbox.active img {
-
             transform: scale(1);   
-
         }
-
-
 
         .close {
-
             position: absolute; top: 30px; right: 40px; color: #fff;
-
             font-size: 40px; font-weight: 200; cursor: pointer;
-
             transition: transform 0.3s;
-
         }
-
         .close:hover { transform: scale(1.1); color: #ccc; }
-
         
-
         #lightbox-caption {
-
             color: #ddd;
-
             margin-top: 25px;
-
             font-size: 15px;
-
             font-weight: 300;
-
             letter-spacing: 1px;
-
             text-align: center;
-
             max-width: 80%;
-
             line-height: 1.6;
-
-            
-
             opacity: 0;
-
             transition: opacity 0.4s ease 0.1s; 
-
         }
-
         #lightbox.active #lightbox-caption {
-
             opacity: 1;
-
         }
-
     </style>
-
 </head>
-
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 
-
-
     <header>
-
         <h1>My Shutter Diary</h1>
-
         <nav>
-
             <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
-
             <a onclick="showSection('about')" id="link-about">ABOUT</a>
-
             <a onclick="showSection('contact')" id="link-contact">CONTACT</a>
-
         </nav>
-
     </header>
 
-
-
     <main>
-
         <section id="portfolio" class="content-section active">
-
             <div class="gallery">
-
                 <div class="gallery-item"><img src="images/17.jpg" alt="사진 17" data-caption="Snowflake1"></div>
-
                 <div class="gallery-item"><img src="images/2.jpg" alt="사진 2" data-caption="Alive"></div>
-
                 <div class="gallery-item"><img src="images/3.jpg" alt="사진 3" data-caption="비움"></div>
-
                 <div class="gallery-item"><img src="images/4.jpg" alt="사진 4" data-caption="Friday Night"></div>
-
                 <div class="gallery-item"><img src="images/5.jpg" alt="사진 5" data-caption="캠핑 아침"></div>
-
                 <div class="gallery-item"><img src="images/6.jpg" alt="사진 6" data-caption="Young"></div>
-
                 <div class="gallery-item"><img src="images/7.jpg" alt="사진 7" data-caption="지구"></div>
-
                 <div class="gallery-item"><img src="images/8.jpg" alt="사진 8" data-caption="Snowflake2"></div>
-
                 <div class="gallery-item"><img src="images/9.jpg" alt="사진 9" data-caption="마침내 봄"></div>
-
                 <div class="gallery-item"><img src="images/10.jpg" alt="사진 10" data-caption="리스펙토 페트로눔"></div>
-
                 <div class="gallery-item"><img src="images/11.jpg" alt="사진 11" data-caption="취미"></div>
-
                 <div class="gallery-item"><img src="images/12.jpg" alt="사진 12" data-caption="여행"></div>
-
                 <div class="gallery-item"><img src="images/13.jpg" alt="사진 13" data-caption="Again"></div>
-
                 <div class="gallery-item"><img src="images/14.jpg" alt="사진 14" data-caption="한옥"></div>
-
                 <div class="gallery-item"><img src="images/15.jpg" alt="사진 15" data-caption="사라져"></div>
-
                 <div class="gallery-item"><img src="images/16.jpg" alt="사진 16" data-caption="VIVID"></div>
-
                 <div class="gallery-item"><img src="images/1.jpg" alt="사진 1" data-caption="하얀 갑천"></div>
-
             </div>
-
         </section>
-
-
 
         <section id="about" class="content-section">
-
             <div class="text-content">
-
                 <h2>나의 시간, 순간의 기록</h2>
-
-                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br>
-
+                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
                 이곳은 거창한 포트폴리오가 아닌, 매일의 시선을 남겨둔 사진 보관소입니다.<br>
-                
-                제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
-
-                    그렇게 모인 습작들은 결국 저만의 작은 역사가 됩니다.</p>
-
+                제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br><br>
+                그렇게 모인 습작들은 결국 저만의 작은 역사가 됩니다.</p>
             </div>
-
         </section>
-
-
 
         <section id="contact" class="content-section">
-
             <div class="text-content">
-
                 <h2>Contact</h2>
-
                 <p>Email: your-email@example.com</p>
-
                 <p>Instagram: @your_id</p>
-
             </div>
-
         </section>
-
     </main>
 
-
-
     <div id="lightbox">
-
         <span class="close">&times;</span>
-
         <img id="lightbox-img" src="" alt="확대 사진">
-
         <div id="lightbox-caption"></div>
-
     </div>
 
-
-
     <script>
-
         // 섹션 전환 함수
-
         function showSection(sectionId) {
-
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-
             document.getElementById(sectionId).classList.add('active');
-
             document.getElementById('link-' + sectionId).classList.add('active');
-
             window.scrollTo(0, 0);
-
         }
-
-
 
         // 라이트박스 관련 요소
-
         const lightbox = document.getElementById('lightbox');
-
         const lightboxImg = document.getElementById('lightbox-img');
-
         const lightboxCaption = document.getElementById('lightbox-caption');
-
         const images = document.querySelectorAll('.gallery-item img');
-
         const closeBtn = document.querySelector('.close');
 
-
-
         // 라이트박스 열기
-
         images.forEach(img => {
-
             img.addEventListener('click', () => {
-
                 lightboxImg.src = img.src;
-
                 lightboxCaption.innerHTML = img.getAttribute('data-caption') || ''; 
-
                 lightbox.classList.add('active'); 
-
             });
-
         });
-
-
 
         // 라이트박스 닫기 함수
-
         function closeLightbox() {
-
             lightbox.classList.remove('active');
-
             setTimeout(() => {
-
                 if(!lightbox.classList.contains('active')) {
-
                     lightboxImg.src = '';
-
                 }
-
             }, 500);
-
         }
 
-
-
         closeBtn.addEventListener('click', closeLightbox);
-
         
-
         // 배경 클릭 시 닫기
-
         lightbox.addEventListener('click', (e) => {
-
             if (e.target === lightbox) closeLightbox();
-
         });
-
-
 
         // ESC 키 눌렀을 때 닫기 추가
-
         document.addEventListener('keydown', (e) => {
-
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-
                 closeLightbox();
-
             }
-
         });
-
     </script>
-
 </body>
-
 </html>
