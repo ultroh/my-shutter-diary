@@ -12,7 +12,6 @@
             background-color: #fafafa;
             color: #333;
             line-height: 1.6;
-            /* 텍스트 선택 방지 (복사 방지 보조) */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -36,31 +35,26 @@
         .content-section { display: none; max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
         .content-section.active { display: block; }
 
-        /* === [수정됨] 정사각형 반응형 갤러리 === */
+        /* 정사각형 반응형 갤러리 */
         .gallery {
             display: grid;
-            /* [수정 1] PC: 3열 고정 배치 */
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px; /* 사진 사이 간격 */
+            gap: 15px; 
         }
 
         .gallery-item {
             width: 100%;
             overflow: hidden;
             background-color: #eee;
-            /* 너비에 맞춰 높이를 자동으로 1:1 비율로 설정 */
             aspect-ratio: 1 / 1; 
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
-            /* 원본 사진 비율을 유지하면서 정사각형 틀에 꽉 차게 맞춤 */
             object-fit: cover; 
             transition: transform 0.6s ease;
             cursor: pointer;
-            
-            /* [수정 2] 이미지 드래그 방지 */
             -webkit-user-drag: none;
             -khtml-user-drag: none;
             -moz-user-drag: none;
@@ -78,23 +72,35 @@
             header { padding: 40px 10px 30px; }
             header h1 { font-size: 6vw; letter-spacing: 2px; }
             nav a { margin: 0 8px; font-size: 12px; }
-            
-            /* 모바일: 무조건 2열 배치 */
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
         }
 
-        /* 라이트박스 */
+        /* 라이트박스 및 사진 설명(Caption) 스타일 */
         #lightbox {
             display: none; position: fixed; z-index: 999; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            /* [수정됨] 사진과 텍스트를 세로로 배치하기 위해 flex-direction 추가 */
+            flex-direction: column; 
             justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
         }
         #lightbox.active { display: flex; opacity: 1; }
         #lightbox img { max-width: 90%; max-height: 80%; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 40px; cursor: pointer; }
+        
+        /* [추가됨] 라이트박스 하단 텍스트 스타일 */
+        #lightbox-caption {
+            color: #ddd;
+            margin-top: 20px;
+            font-size: 15px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
@@ -111,17 +117,17 @@
     <main>
         <section id="portfolio" class="content-section active">
             <div class="gallery">
-                <div class="gallery-item"><img src="images/1.jpg" alt="사진 1"></div>
-                <div class="gallery-item"><img src="images/2.jpg" alt="사진 2"></div>
-                <div class="gallery-item"><img src="images/3.jpg" alt="사진 3"></div>
-                <div class="gallery-item"><img src="images/4.jpg" alt="사진 4"></div>
-                <div class="gallery-item"><img src="images/5.jpg" alt="사진 5"></div>
-                <div class="gallery-item"><img src="images/6.jpg" alt="사진 6"></div>
-                <div class="gallery-item"><img src="images/7.jpg" alt="사진 7"></div>
-                <div class="gallery-item"><img src="images/8.jpg" alt="사진 8"></div>
-                <div class="gallery-item"><img src="images/9.jpg" alt="사진 9"></div>
-                <div class="gallery-item"><img src="images/10.jpg" alt="사진 10"></div>
-                <div class="gallery-item"><img src="images/11.jpg" alt="사진 11"></div>
+                <div class="gallery-item"><img src="images/1.jpg" alt="사진 1" data-caption="빛이 들어오던 따뜻한 오후의 기록"></div>
+                <div class="gallery-item"><img src="images/2.jpg" alt="사진 2" data-caption="비 오는 날,<br>창밖의 풍경"></div>
+                <div class="gallery-item"><img src="images/3.jpg" alt="사진 3" data-caption="우연히 마주친 길고양이"></div>
+                <div class="gallery-item"><img src="images/4.jpg" alt="사진 4" data-caption="설명글이 필요 없다면 이렇게 비워두어도 됩니다."></div>
+                <div class="gallery-item"><img src="images/5.jpg" alt="사진 5" data-caption=""></div>
+                <div class="gallery-item"><img src="images/6.jpg" alt="사진 6" data-caption="제주도 바다의 색감"></div>
+                <div class="gallery-item"><img src="images/7.jpg" alt="사진 7" data-caption="필름 카메라 특유의 질감"></div>
+                <div class="gallery-item"><img src="images/8.jpg" alt="사진 8" data-caption=""></div>
+                <div class="gallery-item"><img src="images/9.jpg" alt="사진 9" data-caption=""></div>
+                <div class="gallery-item"><img src="images/10.jpg" alt="사진 10" data-caption=""></div>
+                <div class="gallery-item"><img src="images/11.jpg" alt="사진 11" data-caption=""></div>
             </div>
         </section>
 
@@ -145,10 +151,10 @@
     <div id="lightbox">
         <span class="close">&times;</span>
         <img id="lightbox-img" src="" alt="확대 사진">
+        <div id="lightbox-caption"></div>
     </div>
 
     <script>
-        // 1. 섹션 전환 함수
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
@@ -157,15 +163,17 @@
             window.scrollTo(0, 0);
         }
 
-        // 2. 라이트박스 기능
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption'); // [추가됨] 캡션 요소 가져오기
         const images = document.querySelectorAll('.gallery-item img');
         const closeBtn = document.querySelector('.close');
 
         images.forEach(img => {
             img.addEventListener('click', () => {
                 lightboxImg.src = img.src;
+                // [추가됨] 클릭한 사진의 data-caption 값을 가져와서 라이트박스에 넣기
+                lightboxCaption.innerHTML = img.getAttribute('data-caption') || ''; 
                 lightbox.classList.add('active');
             });
         });
