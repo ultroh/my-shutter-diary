@@ -16,6 +16,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            overflow-y: scroll; /* [추가됨] 항상 세로 스크롤바를 노출하여 화면 흔들림 방지 */
         }
 
         /* 헤더 및 내비게이션 */
@@ -82,7 +83,6 @@
         #lightbox {
             display: none; position: fixed; z-index: 999; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            /* [수정됨] 사진과 텍스트를 세로로 배치하기 위해 flex-direction 추가 */
             flex-direction: column; 
             justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
         }
@@ -90,7 +90,6 @@
         #lightbox img { max-width: 90%; max-height: 80%; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 40px; cursor: pointer; }
         
-        /* [추가됨] 라이트박스 하단 텍스트 스타일 */
         #lightbox-caption {
             color: #ddd;
             margin-top: 20px;
@@ -171,14 +170,13 @@
 
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
-        const lightboxCaption = document.getElementById('lightbox-caption'); // [추가됨] 캡션 요소 가져오기
+        const lightboxCaption = document.getElementById('lightbox-caption');
         const images = document.querySelectorAll('.gallery-item img');
         const closeBtn = document.querySelector('.close');
 
         images.forEach(img => {
             img.addEventListener('click', () => {
                 lightboxImg.src = img.src;
-                // [추가됨] 클릭한 사진의 data-caption 값을 가져와서 라이트박스에 넣기
                 lightboxCaption.innerHTML = img.getAttribute('data-caption') || ''; 
                 lightbox.classList.add('active');
             });
