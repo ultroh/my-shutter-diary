@@ -34,7 +34,7 @@
         /* 헤더 및 내비게이션 */
         header { text-align: center; padding: 60px 20px 40px; }
         
-        /* [수정됨] 제목 애니메이션 효과 추가 */
+        /* 제목 애니메이션 효과 추가 */
         header h1 {
             font-size: 26px; 
             font-weight: 300; 
@@ -50,7 +50,7 @@
             color: #ff7e5f; /* 흑백과 대비되는 따뜻한 포인트 컬러 */
         }
 
-        /* [수정됨] 메뉴 밑줄 애니메이션 효과 추가 */
+        /* 메뉴 밑줄 애니메이션 효과 추가 */
         nav a {
             position: relative; /* 가상 요소 기준점 */
             margin: 0 15px; 
@@ -120,6 +120,17 @@
         .text-content { text-align: center; padding: 50px 20px; max-width: 700px; margin: 0 auto; }
         .text-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
 
+        /* [추가됨] 방명록(Guestbook) 컨테이너 스타일 */
+        .guestbook-content { max-width: 900px; margin: 0 auto; text-align: center; padding: 50px 20px; }
+        .guestbook-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
+        .padlet-wrapper {
+            margin-top: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: #fff;
+        }
+
         /* 모바일 대응 */
         @media (max-width: 768px) {
             header { padding: 40px 10px 30px; }
@@ -136,7 +147,7 @@
             position: fixed; z-index: 999; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.95); 
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0;             
+            opacity: 0;              
             visibility: hidden;    
             pointer-events: none;  
             transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
@@ -145,7 +156,7 @@
         }
 
         #lightbox.active {
-            opacity: 1;             
+            opacity: 1;              
             visibility: visible;   
             pointer-events: auto;   
         }
@@ -193,6 +204,7 @@
         <nav>
             <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
             <a onclick="showSection('about')" id="link-about">ABOUT</a>
+            <a onclick="showSection('guestbook')" id="link-guestbook">GUESTBOOK</a>
             <a onclick="showSection('contact')" id="link-contact">CONTACT</a>
         </nav>
     </header>
@@ -227,6 +239,23 @@
                 이곳은 거창한 포트폴리오가 아닌, 매일의 시선을 남겨둔 사진 보관소입니다.<br><br>
                 제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
                 그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
+            </div>
+        </section>
+
+        <section id="guestbook" class="content-section">
+            <div class="guestbook-content">
+                <h2>Guestbook</h2>
+                <p>사진들을 감상하신 후 자유롭게 발자취를 남겨주세요!</p>
+                
+                <div class="padlet-wrapper">
+                    <iframe 
+                        src="패들렛_공유_링크" 
+                        width="100%" 
+                        height="600px" 
+                        frameborder="0" 
+                        style="border:none; overflow:hidden;">
+                    </iframe>
+                </div>
             </div>
         </section>
 
