@@ -101,26 +101,33 @@
             aspect-ratio: 1 / 1; 
         }
 
+        /* ==== 수정된 부분 시작 ==== */
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover; 
+            -webkit-filter: grayscale(100%); /* Safari 등 호환성 추가 */
             filter: grayscale(100%);
-            transition: transform 0.6s ease, filter 0.4s ease;
+            transition: transform 0.6s ease, filter 0.4s ease, -webkit-filter 0.4s ease;
             cursor: pointer;
             -webkit-user-drag: none;
         }
 
-        .gallery-item:hover img { 
-            transform: scale(1.05); 
-            filter: grayscale(0%);
+        /* 마우스가 있는 기기에서만 hover 효과 적용 (모바일 터치 멈춤 버그 해결) */
+        @media (hover: hover) and (pointer: fine) {
+            .gallery-item:hover img { 
+                transform: scale(1.05); 
+                -webkit-filter: grayscale(0%);
+                filter: grayscale(0%);
+            }
         }
+        /* ==== 수정된 부분 끝 ==== */
 
         /* 정보(About) & 연락처(Contact) 스타일 */
         .text-content { text-align: center; padding: 50px 20px; max-width: 700px; margin: 0 auto; }
         .text-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
 
-        /* [추가됨] 방명록(Guestbook) 컨테이너 스타일 */
+        /* 방명록(Guestbook) 컨테이너 스타일 */
         .guestbook-content { max-width: 600px; margin: 0 auto; text-align: center; padding: 50px 20px; }
         .guestbook-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
         .padlet-wrapper {
