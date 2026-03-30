@@ -29,6 +29,9 @@
             -moz-user-select: none;
             -ms-user-select: none;
             overflow-y: scroll; /* 항상 세로 스크롤바 유지 */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 푸터를 하단에 고정하기 위한 설정 */
         }
 
         /* 헤더 및 내비게이션 */
@@ -83,6 +86,9 @@
             left: 0;
         }
 
+        /* 메인 컨텐츠 영역 확장 */
+        main { flex-grow: 1; }
+
         /* 컨텐츠 섹션 관리 */
         .content-section { display: none; max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
         .content-section.active { display: block; }
@@ -136,6 +142,16 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             background: #fff;
+        }
+
+        /* ==== 카피라이트 푸터 스타일 ==== */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 12px;
+            color: #aaa;
+            letter-spacing: 1px;
+            background-color: #fafafa;
         }
 
         /* 모바일 대응 */
@@ -270,6 +286,10 @@
             </div>
         </section>
     </main>
+
+    <footer>
+        <p>&copy; 2026 My Shutter Diary. All rights reserved.</p>
+    </footer>
 
     <div id="lightbox">
         <span class="close">&times;</span>
