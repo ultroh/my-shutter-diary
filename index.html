@@ -1,273 +1,715 @@
 <!DOCTYPE html>
+
 <html lang="ko">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Photography Portfolio</title>
+
     
+
     <link rel="icon" type="image/png" href="apple-touch-icon.png">
+
     <link rel="apple-touch-icon" href="camera.png">
 
+
+
     <style>
+
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
+
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         
+
         body {
+
             font-family: 'Pretendard', sans-serif;
+
             background-color: #fafafa;
+
             color: #333;
+
             line-height: 1.6;
+
             user-select: none;
+
             overflow-y: scroll;
+
             display: flex;
+
             flex-direction: column;
+
             min-height: 100vh;
+
         }
+
+
 
         /* [헤더] */
+
         header { text-align: center; padding: 60px 20px 40px; }
+
         
-        header h1 {
-            font-size: 26px; 
-            font-weight: 300; 
-            letter-spacing: 4px; /* 자간 고정 */
-            text-transform: uppercase; 
-            margin-bottom: 25px;
-            display: inline-block;
-            cursor: pointer;
-            color: #333; /* 기본 색상 */
-            /* color에만 부드러운 전환 효과 적용 (자간은 제외) */
-            transition: color 0.4s ease; 
-        }
 
-        /* 호버 시에도 자간이 움직이지 않도록 4px 유지 */
-        header h1:hover {
-            letter-spacing: 4px;
-        }
+/* 수정된 헤더 스타일 */
 
-        /* [핵심] 주황색 활성화 상태 */
-        header h1.point-theme-active {
-            color: #ff7e5f !important; /* 주황색 변환 */
-            letter-spacing: 4px; /* 자간 고정 */
-        }
+header h1 {
 
-        /* 내비게이션 */
+    font-size: 26px; 
+
+    font-weight: 300; 
+
+    letter-spacing: 4px; /* 기본 자간 */
+
+    text-transform: uppercase; 
+
+    margin-bottom: 25px;
+
+    display: inline-block;
+
+    transition: color 0.4s ease; /* 자간 애니메이션을 빼고 색상만 부드럽게 변경 */
+
+    cursor: pointer;
+
+    color: #333;
+
+}
+
+
+
+/* 호버 시에도 자간을 4px로 유지 */
+
+header h1:hover {
+
+    letter-spacing: 4px; /* 기존 8px에서 4px로 수정하여 움직임 방지 */
+
+}
+
+
+
+/* 활성화 상태에서도 자간 유지 */
+
+header h1.point-theme-active {
+
+    color: #ff7e5f !important;
+
+    letter-spacing: 4px; /* 자간 고정 */
+
+}
+
+        /* ========================================= */
+
+
+
         nav a {
+
             position: relative;
+
             margin: 0 15px; 
+
             text-decoration: none; 
+
             color: #999;
+
             font-size: 13px; 
+
             letter-spacing: 2px; 
+
             transition: color 0.3s;
+
             cursor: pointer;
+
             padding-bottom: 5px;
+
         }
+
         
+
         nav a::after {
+
             content: '';
+
             position: absolute;
+
             width: 0;
+
             height: 2px;
+
             bottom: 0;
+
             left: 50%;
+
             background-color: #000;
+
             transition: width 0.3s ease, left 0.3s ease;
+
         }
+
+
 
         nav a:hover, nav a.active { color: #000; -webkit-text-stroke: 0.4px #000;}
+
         nav a:hover::after, nav a.active::after { width: 100%; left: 0; }
+
+
 
         main { flex-grow: 1; display: flex; flex-direction: column; }
 
+
+
         .content-section { 
+
             display: none; 
+
             max-width: 1200px; 
+
             margin: 0 auto; 
+
             padding: 0 15px 60px; 
+
             width: 100%;
+
         }
+
         .content-section.active { display: block; }
 
+
+
         /* 갤러리 */
+
         .gallery {
+
             display: grid;
+
             grid-template-columns: repeat(3, 1fr);
+
             gap: 15px; 
+
         }
+
+
 
         .gallery-item {
+
             width: 100%;
+
             overflow: hidden;
+
             background-color: #eee;
+
             aspect-ratio: 1 / 1; 
+
         }
+
+
 
         .gallery-item img {
+
             width: 100%;
+
             height: 100%;
+
             object-fit: cover; 
+
             filter: grayscale(100%);
+
             transition: transform 0.6s ease, filter 0.4s ease;
+
             cursor: pointer;
+
             -webkit-user-drag: none;
+
         }
+
+
 
         @media (hover: hover) and (pointer: fine) {
+
             .gallery-item:hover img { 
+
                 transform: scale(1.05); 
+
                 filter: grayscale(0%);
+
             }
+
         }
+
+
+
+        /* About & Contact 중앙 정렬 박스 */
 
         #about.active, #contact.active {
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             align-items: center;
+
             min-height: 50vh;
+
         }
+
+
 
         .text-content { 
+
             text-align: center;
+
             padding: 40px 20px; 
+
             max-width: 700px;
+
             width: 100%;
+
             margin: 0 auto; 
+
         }
+
+
 
         .text-content h2 { 
+
             font-weight: 300; 
+
             margin-bottom: 30px; 
+
             letter-spacing: 2px; 
+
             font-size: 22px;
+
         }
+
+
 
         .text-content p {
-            word-break: keep-all; 
+
+            word-break: keep-all; /* 단어 단위 줄바꿈 */
+
             overflow-wrap: break-word;
+
             line-height: 1.8;
+
             color: #555;
+
             font-size: 15px;
+
         }
+
+
+
+        .guestbook-content { 
+
+            max-width: 600px; 
+
+            margin: 0 auto; 
+
+            text-align: center; 
+
+            padding: 20px; 
+
+            width: 100%;
+
+        }
+
+        .guestbook-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
+
+        .padlet-wrapper {
+
+            margin-top: 20px;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+            background: #fff;
+
+        }
+
+
 
         footer {
+
             text-align: center;
+
             padding: 40px 20px;
+
             font-size: 12px;
+
             color: #aaa;
+
             letter-spacing: 1px;
+
+            background-color: #fafafa;
+
         }
+
+
+
+        @media (max-width: 768px) {
+
+            header { padding: 40px 10px 30px; }
+
+            header h1 { font-size: 6vw; letter-spacing: 2px; }
+
+            nav a { margin: 0 8px; font-size: 12px; }
+
+            .gallery {
+
+                grid-template-columns: repeat(2, 1fr);
+
+                gap: 10px;
+
+            }
+
+            .text-content { padding: 30px 10px; }
+
+        }
+
+
 
         /* 라이트박스 */
+
         #lightbox {
+
             position: fixed; z-index: 999; top: 0; left: 0;
+
             width: 100%; height: 100%; background: rgba(0,0,0,0.95); 
+
             display: flex; flex-direction: column; justify-content: center; align-items: center;
+
             opacity: 0; visibility: hidden; pointer-events: none;  
+
             transition: opacity 0.4s ease, visibility 0.4s ease;
+
         }
+
+
+
         #lightbox.active { opacity: 1; visibility: visible; pointer-events: auto; }
-        #lightbox img { max-width: 90%; max-height: 80%; transition: transform 0.5s ease; transform: scale(0.9); }
+
+
+
+        #lightbox img {
+
+            max-width: 90%; max-height: 80%;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+
+            transform: scale(0.9); transition: transform 0.5s ease;
+
+        }
+
+
+
         #lightbox.active img { transform: scale(1); }
-        .close { position: absolute; top: 30px; right: 40px; color: #fff; font-size: 40px; cursor: pointer; }
+
+
+
+        .close {
+
+            position: absolute; top: 30px; right: 40px; color: #fff;
+
+            font-size: 40px; font-weight: 200; cursor: pointer;
+
+        }
+
+        
+
+        #lightbox-caption {
+
+            color: #ddd; margin-top: 25px; font-size: 15px; font-weight: 300;
+
+            letter-spacing: 1px; text-align: center; max-width: 80%;
+
+        }
+
     </style>
+
 </head>
+
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 
+
+
     <header>
+
         <h1 id="main-title"><b>My Shutter Diary</b></h1>
+
         <nav>
+
             <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
+
             <a onclick="showSection('about')" id="link-about">ABOUT</a>
+
             <a onclick="showSection('contact')" id="link-contact">CONTACT</a>
+
         </nav>
+
     </header>
 
+
+
     <main>
+
         <section id="portfolio" class="content-section active">
+
             <div class="gallery">
-                <div class="gallery-item"><img src="images/12.jpg" alt="사진 1" data-caption="Snowflake"></div>
-                <div class="gallery-item"><img src="images/14.jpg" alt="사진 2" data-caption="Winter"></div>
-                <div class="gallery-item"><img src="images/5.jpg" alt="사진 3" data-caption="Spring"></div>
+
+                <div class="gallery-item"><img src="images/12.jpg" alt="사진 12" data-caption="Snowflake1"></div>
+
+                <div class="gallery-item"><img src="images/14.jpg" alt="사진 14" data-caption="Snowflake2"></div>
+
+                <div class="gallery-item"><img src="images/5.jpg" alt="사진 5" data-caption="마침내 봄1"></div>
+
+                <div class="gallery-item"><img src="images/3.jpg" alt="사진 3" data-caption="지구1"></div>
+
+                <div class="gallery-item"><img src="images/15.jpg" alt="사진 15" data-caption="마침내 봄2"></div>
+
+                <div class="gallery-item"><img src="images/20.jpg" alt="사진 20" data-caption="취미"></div>
+
+                <div class="gallery-item"><img src="images/1.jpg" alt="사진 1" data-caption="Young"></div>
+
+                <div class="gallery-item"><img src="images/2.jpg" alt="사진 2" data-caption="Open"></div>
+
+                <div class="gallery-item"><img src="images/10.jpg" alt="사진 10" data-caption="Open2"></div>
+
+                <div class="gallery-item"><img src="images/6.jpg" alt="사진 6" data-caption="Inumaki Toge: 사라져"></div>
+
+                <div class="gallery-item"><img src="images/9.jpg" alt="사진 9" data-caption="하트"></div>
+
+                <div class="gallery-item"><img src="images/11.jpg" alt="사진 11" data-caption="Camping Morning"></div>
+
+                <div class="gallery-item"><img src="images/17.jpg" alt="사진 17" data-caption="VIVID"></div>
+
+                <div class="gallery-item"><img src="images/26.jpg" alt="사진 26" data-caption="새 한마리"></div>
+
+                <div class="gallery-item"><img src="images/27.jpg" alt="사진 27" data-caption="VIVID2"></div>
+
+                <div class="gallery-item"><img src="images/28.jpg" alt="사진 28" data-caption="비움"></div>
+
+                <div class="gallery-item"><img src="images/29.jpg" alt="사진 29" data-caption="Friday Night"></div>
+
+                <div class="gallery-item"><img src="images/25.jpg" alt="사진 25" data-caption="여행2"></div>
+
             </div>
+
         </section>
+
+
 
         <section id="about" class="content-section">
+
             <div class="text-content">
+
                 <h2>순간을 기록</h2>
-                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.</p>
+
+                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
+
+                이곳은 거창한 포트폴리오가 아닌, 매일의 시선으로 채워가는 사진 보관소입니다.<br><br>
+
+                제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
+
+                그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
+
             </div>
+
         </section>
+
+
 
         <section id="contact" class="content-section">
+
             <div class="text-content">
+
                 <h2>Email</h2>
+
                 <p>hello.shutterdiary@gmail.com</p>
+
             </div>
+
+            
+
+            <div class="guestbook-content">
+
+                <h2>Guestbook</h2>
+
+                <div class="padlet-wrapper">
+
+                    <iframe 
+
+                        src="https://padlet.com/shutterdiary/padlet-5ivg79knwedgex19"
+
+                        width="100%" 
+
+                        height="400px" 
+
+                        frameborder="0" 
+
+                        style="border:none; overflow:hidden;">
+
+                    </iframe>
+
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
+
+
     <footer>
+
         <p>&copy; 2026 My Shutter Diary. All rights reserved.</p>
+
     </footer>
 
+
+
     <div id="lightbox">
+
         <span class="close">&times;</span>
+
         <img id="lightbox-img" src="" alt="확대 사진">
+
+        <div id="lightbox-caption"></div>
+
     </div>
 
+
+
     <script>
-        // 1. 테마 토글 및 상태 유지 로직
+
+        // =========================================
+
+        // [테마 토글 로직] 주황색 포인트 컬러 버전
+
+        // =========================================
+
         const mainTitle = document.getElementById('main-title');
+
         
-        // 페이지 로드 시 저장된 상태 확인
+
+        // 페이지 로드 시 저장된 상태 복구
+
         const savedTheme = localStorage.getItem('titleColorTheme');
+
         if (savedTheme === 'point') {
+
             mainTitle.classList.add('point-theme-active');
+
         }
 
-        // 제목 클릭 시 토글
+
+
+        // 터치/클릭 시 토글
+
         mainTitle.addEventListener('click', () => {
+
             mainTitle.classList.toggle('point-theme-active');
+
             
-            // 상태 저장
+
             if (mainTitle.classList.contains('point-theme-active')) {
+
                 localStorage.setItem('titleColorTheme', 'point');
+
             } else {
+
                 localStorage.setItem('titleColorTheme', 'default');
+
             }
+
         });
 
-        // 2. 섹션 전환 기능
+
+
+
+
+        // [기본 기능들]
+
         function showSection(sectionId) {
+
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+
+            const targetSection = document.getElementById(sectionId);
+
+            targetSection.classList.add('active');
+
             document.getElementById('link-' + sectionId).classList.add('active');
+
             window.scrollTo(0, 0);
+
         }
 
-        // 3. 라이트박스 로직
+
+
         const lightbox = document.getElementById('lightbox');
+
         const lightboxImg = document.getElementById('lightbox-img');
+
+        const lightboxCaption = document.getElementById('lightbox-caption');
+
         const images = document.querySelectorAll('.gallery-item img');
+
         const closeBtn = document.querySelector('.close');
 
+
+
         images.forEach(img => {
+
             img.addEventListener('click', () => {
+
                 lightboxImg.src = img.src;
+
+                lightboxCaption.innerHTML = img.getAttribute('data-caption') || ''; 
+
                 lightbox.classList.add('active'); 
+
             });
+
         });
 
+
+
         function closeLightbox() {
+
             lightbox.classList.remove('active');
+
+            setTimeout(() => { if(!lightbox.classList.contains('active')) lightboxImg.src = ''; }, 500);
+
         }
 
+
+
         closeBtn.addEventListener('click', closeLightbox);
+
         lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+        document.addEventListener('keydown', (e) => {
+
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+
+        });
+
     </script>
+
 </body>
+
 </html>
