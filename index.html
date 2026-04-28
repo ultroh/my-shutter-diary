@@ -6,25 +6,15 @@
     <title>Photography Portfolio</title>
     
     <link rel="icon" type="image/png" href="apple-touch-icon.png">
-    
     <link rel="apple-touch-icon" href="camera.png">
 
-
     <style>
-        /* 1. 폰트 불러오기 (CSS 맨 위에 위치) */
+        /* 1. 폰트 불러오기 */
         @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-
-        /* 2. 사진 밑 스토리 텍스트에 적용할 스타일 */
-        .story-text {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 14px; 
-            color: #444444; 
-            line-height: 1.6; 
-            word-break: keep-all; 
-        }
 
         /* 기본 설정 및 여백 초기화 */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             font-family: 'Pretendard', sans-serif;
             background-color: #fafafa;
@@ -34,16 +24,15 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            overflow-y: scroll; /* 항상 세로 스크롤바 유지 */
+            overflow-y: scroll;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* 푸터를 하단에 고정하기 위한 설정 */
+            min-height: 100vh;
         }
 
         /* 헤더 및 내비게이션 */
         header { text-align: center; padding: 60px 20px 40px; }
         
-        /* 제목 애니메이션 효과 추가 */
         header h1 {
             font-size: 26px; 
             font-weight: 300; 
@@ -55,13 +44,12 @@
             cursor: default;
         }
         header h1:hover {
-            letter-spacing: 8px; /* 마우스를 올리면 자간이 넓어짐 */
-            color: #ff7e5f; /* 흑백과 대비되는 따뜻한 포인트 컬러 */
+            letter-spacing: 8px;
+            color: #ff7e5f;
         }
 
-        /* 메뉴 밑줄 애니메이션 효과 추가 */
         nav a {
-            position: relative; /* 가상 요소 기준점 */
+            position: relative;
             margin: 0 15px; 
             text-decoration: none; 
             color: #999;
@@ -72,7 +60,6 @@
             padding-bottom: 5px;
         }
         
-        /* 메뉴 텍스트 아래 숨겨진 밑줄 생성 */
         nav a::after {
             content: '';
             position: absolute;
@@ -85,21 +72,22 @@
         }
 
         nav a:hover, nav a.active { color: #000; -webkit-text-stroke: 0.4px #000;}
-        
-        /* 마우스를 올리거나 활성화 시 밑줄이 중앙에서 양옆으로 늘어남 */
-        nav a:hover::after, nav a.active::after {
-            width: 100%;
-            left: 0;
-        }
+        nav a:hover::after, nav a.active::after { width: 100%; left: 0; }
 
-        /* 메인 컨텐츠 영역 확장 */
-        main { flex-grow: 1; }
+        /* 메인 컨텐츠 영역 */
+        main { flex-grow: 1; display: flex; flex-direction: column; }
 
         /* 컨텐츠 섹션 관리 */
-        .content-section { display: none; max-width: 1200px; margin: 0 auto; padding: 0 15px 60px; }
+        .content-section { 
+            display: none; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 15px 60px; 
+            width: 100%;
+        }
         .content-section.active { display: block; }
 
-        /* 정사각형 반응형 갤러리 */
+        /* 갤러리 (포트폴리오) 스타일 */
         .gallery {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -113,47 +101,77 @@
             aspect-ratio: 1 / 1; 
         }
 
-        /* ==== 수정된 부분 시작 ==== */
         .gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover; 
-            -webkit-filter: grayscale(100%); /* Safari 등 호환성 추가 */
             filter: grayscale(100%);
-            transition: transform 0.6s ease, filter 0.4s ease, -webkit-filter 0.4s ease;
+            transition: transform 0.6s ease, filter 0.4s ease;
             cursor: pointer;
             -webkit-user-drag: none;
         }
 
-        /* 마우스가 있는 기기에서만 hover 효과 적용 (모바일 터치 멈춤 버그 해결) */
         @media (hover: hover) and (pointer: fine) {
             .gallery-item:hover img { 
                 transform: scale(1.05); 
-                -webkit-filter: grayscale(0%);
                 filter: grayscale(0%);
             }
         }
-        /* ==== 수정된 부분 끝 ==== */
 
-        /* 정보(About) & 연락처(Contact) 스타일 */
-        .text-content { text-align: center; padding: 50px 20px; max-width: 700px; margin: 0 auto; }
-        .text-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
+        /* [중요] About & Contact 중앙 정렬 및 박스 설정 */
+        #about.active, #contact.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 세로 중앙 (어느 정도 높이가 있을 때) */
+            align-items: center;    /* 가로 중앙 */
+            min-height: 50vh;       /* 섹션 최소 높이 확보 */
+        }
 
-        /* 방명록(Guestbook) 컨테이너 스타일 */
-        .guestbook-content { max-width: 600px; margin: 0 auto; text-align: center; padding: 50px 20px; }
+        .text-content { 
+            text-align: center;     /* 텍스트 중앙 정렬 */
+            padding: 40px 20px; 
+            max-width: 700px;       /* 보이지 않는 박스의 최대 너비 */
+            width: 100%;
+            margin: 0 auto; 
+        }
+
+        .text-content h2 { 
+            font-weight: 300; 
+            margin-bottom: 30px; 
+            letter-spacing: 2px; 
+            font-size: 22px;
+        }
+
+        .text-content p {
+            word-break: keep-all;   /* 단어 단위 줄바꿈 */
+            overflow-wrap: break-word;
+            line-height: 1.8;
+            color: #555;
+            font-size: 15px;
+            text-align: center;     /* 문단 정렬도 중앙으로 하여 균형 유지 */
+        }
+
+        /* 방명록 스타일 */
+        .guestbook-content { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            text-align: center; 
+            padding: 20px; 
+            width: 100%;
+        }
         .guestbook-content h2 { font-weight: 300; margin-bottom: 20px; letter-spacing: 2px; }
         .padlet-wrapper {
-            margin-top: 40px;
+            margin-top: 20px;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             background: #fff;
         }
 
-        /* ==== 카피라이트 푸터 스타일 ==== */
+        /* 푸터 스타일 */
         footer {
             text-align: center;
-            padding: 30px 20px;
+            padding: 40px 20px;
             font-size: 12px;
             color: #aaa;
             letter-spacing: 1px;
@@ -169,73 +187,37 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
+            .text-content { padding: 30px 10px; }
         }
 
-        /* 라이트박스 애니메이션 업그레이드 */
+        /* 라이트박스 */
         #lightbox {
             position: fixed; z-index: 999; top: 0; left: 0;
             width: 100%; height: 100%; background: rgba(0,0,0,0.95); 
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0;              
-            visibility: hidden;    
-            pointer-events: none;  
-            transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
-                        visibility 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            will-change: opacity, visibility; 
+            opacity: 0; visibility: hidden; pointer-events: none;  
+            transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
-        #lightbox.active {
-            opacity: 1;              
-            visibility: visible;   
-            pointer-events: auto;   
-        }
+        #lightbox.active { opacity: 1; visibility: visible; pointer-events: auto; }
 
         #lightbox img {
             max-width: 90%; max-height: 80%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            transform: scale(0.9); 
-            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); 
-            will-change: transform;
+            transform: scale(0.9); transition: transform 0.5s ease;
         }
 
-        #lightbox.active img {
-            transform: scale(1);   
-        }
+        #lightbox.active img { transform: scale(1); }
 
         .close {
             position: absolute; top: 30px; right: 40px; color: #fff;
             font-size: 40px; font-weight: 200; cursor: pointer;
-            transition: transform 0.3s;
         }
-        .close:hover { transform: scale(1.1); color: #ccc; }
         
         #lightbox-caption {
-            color: #ddd;
-            margin-top: 25px;
-            font-size: 15px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            text-align: center;
-            max-width: 80%;
-            line-height: 1.6;
-            opacity: 0;
-            transition: opacity 0.4s ease 0.1s; 
+            color: #ddd; margin-top: 25px; font-size: 15px; font-weight: 300;
+            letter-spacing: 1px; text-align: center; max-width: 80%;
         }
-        #lightbox.active #lightbox-caption {
-            opacity: 1;
-        }
-
-.text-content p {
-    /* 단어(띄어쓰기) 단위로 줄바꿈을 유지합니다 */
-    word-break: keep-all;
-    
-    /* 단어가 너무 길어서 화면 밖으로 나가는 경우를 방지합니다 */
-    overflow-wrap: break-word;
-
-    /* 가독성을 높여주는 추가 설정 */
-    line-height: 1.7;
-    text-align: left; /* 단어 단위 줄바꿈 시에는 왼쪽 정렬이 더 자연스럽습니다 */
-}
     </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
@@ -252,37 +234,36 @@
     <main>
         <section id="portfolio" class="content-section active">
             <div class="gallery">
-                
-<div class="gallery-item"><img src="images/12.jpg" alt="사진 12" data-caption="Snowflake1"></div>
-<div class="gallery-item"><img src="images/14.jpg" alt="사진 14" data-caption="Snowflake2"></div>
-<div class="gallery-item"><img src="images/5.jpg" alt="사진 5" data-caption="마침내 봄1"></div>
-<div class="gallery-item"><img src="images/3.jpg" alt="사진 3" data-caption="지구1"></div>
-<div class="gallery-item"><img src="images/15.jpg" alt="사진 15" data-caption="마침내 봄2"></div>
-<div class="gallery-item"><img src="images/20.jpg" alt="사진 20" data-caption="취미"></div>
-<div class="gallery-item"><img src="images/1.jpg" alt="사진 1" data-caption="Young"></div>
-<div class="gallery-item"><img src="images/2.jpg" alt="사진 2" data-caption="Open"></div>
-<div class="gallery-item"><img src="images/10.jpg" alt="사진 10" data-caption="Open2"></div>
-<div class="gallery-item"><img src="images/6.jpg" alt="사진 6" data-caption="Inumaki Toge: 사라져"></div>
-<div class="gallery-item"><img src="images/9.jpg" alt="사진 9" data-caption="하트"></div>
-<div class="gallery-item"><img src="images/11.jpg" alt="사진 11" data-caption="Camping Morning"></div>
-<div class="gallery-item"><img src="images/17.jpg" alt="사진 17" data-caption="VIVID"></div>
-<div class="gallery-item"><img src="images/26.jpg" alt="사진 26" data-caption="새 한마리"></div>
-<div class="gallery-item"><img src="images/27.jpg" alt="사진 27" data-caption="VIVID2"></div>
-<div class="gallery-item"><img src="images/28.jpg" alt="사진 28" data-caption="비움"></div>
-<div class="gallery-item"><img src="images/29.jpg" alt="사진 29" data-caption="Friday Night"></div>
-<div class="gallery-item"><img src="images/25.jpg" alt="사진 25" data-caption="여행2"></div>
+                <div class="gallery-item"><img src="images/12.jpg" alt="사진 12" data-caption="Snowflake1"></div>
+                <div class="gallery-item"><img src="images/14.jpg" alt="사진 14" data-caption="Snowflake2"></div>
+                <div class="gallery-item"><img src="images/5.jpg" alt="사진 5" data-caption="마침내 봄1"></div>
+                <div class="gallery-item"><img src="images/3.jpg" alt="사진 3" data-caption="지구1"></div>
+                <div class="gallery-item"><img src="images/15.jpg" alt="사진 15" data-caption="마침내 봄2"></div>
+                <div class="gallery-item"><img src="images/20.jpg" alt="사진 20" data-caption="취미"></div>
+                <div class="gallery-item"><img src="images/1.jpg" alt="사진 1" data-caption="Young"></div>
+                <div class="gallery-item"><img src="images/2.jpg" alt="사진 2" data-caption="Open"></div>
+                <div class="gallery-item"><img src="images/10.jpg" alt="사진 10" data-caption="Open2"></div>
+                <div class="gallery-item"><img src="images/6.jpg" alt="사진 6" data-caption="Inumaki Toge: 사라져"></div>
+                <div class="gallery-item"><img src="images/9.jpg" alt="사진 9" data-caption="하트"></div>
+                <div class="gallery-item"><img src="images/11.jpg" alt="사진 11" data-caption="Camping Morning"></div>
+                <div class="gallery-item"><img src="images/17.jpg" alt="사진 17" data-caption="VIVID"></div>
+                <div class="gallery-item"><img src="images/26.jpg" alt="사진 26" data-caption="새 한마리"></div>
+                <div class="gallery-item"><img src="images/27.jpg" alt="사진 27" data-caption="VIVID2"></div>
+                <div class="gallery-item"><img src="images/28.jpg" alt="사진 28" data-caption="비움"></div>
+                <div class="gallery-item"><img src="images/29.jpg" alt="사진 29" data-caption="Friday Night"></div>
+                <div class="gallery-item"><img src="images/25.jpg" alt="사진 25" data-caption="여행2"></div>
             </div>
         </section>
 
-<section id="about" class="content-section">
-    <div class="text-content">
-        <h2>순간을 기록</h2>
-        <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
-        이곳은 거창한 포트폴리오가 아닌, 매일의 시선으로 채워가는 사진 보관소입니다.<br><br>
-        제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
-        그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
-    </div>
-</section>
+        <section id="about" class="content-section">
+            <div class="text-content">
+                <h2>순간을 기록</h2>
+                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
+                이곳은 거창한 포트폴리오가 아닌, 매일의 시선으로 채워가는 사진 보관소입니다.<br><br>
+                제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
+                그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
+            </div>
+        </section>
 
         <section id="contact" class="content-section">
             <div class="text-content">
@@ -292,13 +273,11 @@
             
             <div class="guestbook-content">
                 <h2>Guestbook</h2>
-                <p></p>
-                
                 <div class="padlet-wrapper">
                     <iframe 
                         src="https://padlet.com/shutterdiary/padlet-5ivg79knwedgex19"
                         width="100%" 
-                        height="300px" 
+                        height="400px" 
                         frameborder="0" 
                         style="border:none; overflow:hidden;">
                     </iframe>
@@ -318,23 +297,23 @@
     </div>
 
     <script>
-        // 섹션 전환 함수
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            
+            const targetSection = document.getElementById(sectionId);
+            targetSection.classList.add('active');
             document.getElementById('link-' + sectionId).classList.add('active');
+            
             window.scrollTo(0, 0);
         }
 
-        // 라이트박스 관련 요소
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCaption = document.getElementById('lightbox-caption');
         const images = document.querySelectorAll('.gallery-item img');
         const closeBtn = document.querySelector('.close');
 
-        // 라이트박스 열기
         images.forEach(img => {
             img.addEventListener('click', () => {
                 lightboxImg.src = img.src;
@@ -343,7 +322,6 @@
             });
         });
 
-        // 라이트박스 닫기 함수
         function closeLightbox() {
             lightbox.classList.remove('active');
             setTimeout(() => {
@@ -354,13 +332,10 @@
         }
 
         closeBtn.addEventListener('click', closeLightbox);
-        
-        // 배경 클릭 시 닫기
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) closeLightbox();
         });
 
-        // ESC 키 눌렀을 때 닫기 추가
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
                 closeLightbox();
