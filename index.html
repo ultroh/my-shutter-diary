@@ -226,15 +226,16 @@
         }
 
 .text-content p {
-        /* 이 부분이 핵심입니다! */
-        word-break: break-all;
-        
-        /* 텍스트 정렬을 양쪽 정렬(justify)로 하면 
-           음절 단위 줄바꿈 시 오른쪽 끝이 더 깔끔하게 정렬됩니다. */
-        text-align: justify; 
-        
-        line-height: 1.6; /* 가독성을 위한 줄 간격 */
-    }
+    /* 단어(띄어쓰기) 단위로 줄바꿈을 유지합니다 */
+    word-break: keep-all;
+    
+    /* 단어가 너무 길어서 화면 밖으로 나가는 경우를 방지합니다 */
+    overflow-wrap: break-word;
+
+    /* 가독성을 높여주는 추가 설정 */
+    line-height: 1.7;
+    text-align: left; /* 단어 단위 줄바꿈 시에는 왼쪽 정렬이 더 자연스럽습니다 */
+}
     </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
@@ -281,7 +282,7 @@
         제가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
         그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
     </div>
-        </section>
+</section>
 
         <section id="contact" class="content-section">
             <div class="text-content">
