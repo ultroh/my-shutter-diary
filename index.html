@@ -28,29 +28,29 @@
         /* [헤더] */
         header { text-align: center; padding: 60px 20px 40px; }
         
-        header h1 {
-            font-size: 26px; 
-            font-weight: 300; 
-            letter-spacing: 4px;
-            text-transform: uppercase; 
-            margin-bottom: 25px;
-            display: inline-block;
-            transition: letter-spacing 0.4s ease, color 0.4s ease;
-            cursor: pointer;
-            color: #333; /* 기본 색상 */
-        }
+/* 수정된 헤더 스타일 */
+header h1 {
+    font-size: 26px; 
+    font-weight: 300; 
+    letter-spacing: 4px; /* 기본 자간 */
+    text-transform: uppercase; 
+    margin-bottom: 25px;
+    display: inline-block;
+    transition: color 0.4s ease; /* 자간 애니메이션을 빼고 색상만 부드럽게 변경 */
+    cursor: pointer;
+    color: #333;
+}
 
-        /* 호버 시 자간 효과는 공통 적용 */
-        header h1:hover {
-            letter-spacing: 8px;
-        }
+/* 호버 시에도 자간을 4px로 유지 */
+header h1:hover {
+    letter-spacing: 4px; /* 기존 8px에서 4px로 수정하여 움직임 방지 */
+}
 
-        /* ========================================= */
-        /* [핵심] 주황색 포인트 테마 클래스 */
-        /* ========================================= */
-        header h1.point-theme-active {
-            color: #ff7e5f !important; /* 터치 시 변하는 주황색 */
-        }
+/* 활성화 상태에서도 자간 유지 */
+header h1.point-theme-active {
+    color: #ff7e5f !important;
+    letter-spacing: 4px; /* 자간 고정 */
+}
         /* ========================================= */
 
         nav a {
