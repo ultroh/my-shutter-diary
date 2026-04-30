@@ -19,7 +19,7 @@
             color: #333;
             line-height: 1.6;
             user-select: none;
-            overflow-y: scroll; /* 스크롤 정상 작동하도록 원복 */
+            overflow-y: scroll; 
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -30,9 +30,9 @@
             text-align: center; 
             padding: 25px 20px 15px; 
             background-color: #fafafa;
-            position: sticky; /* 상단 메뉴 고정 */
-            top: 0; /* 최상단 위치 */
-            z-index: 10; /* 스크롤 시 사진이 메뉴 아래로 들어가도록 설정 */
+            position: sticky; 
+            top: 0; 
+            z-index: 10; 
         }
         
         /* 수정된 헤더 스타일 */
@@ -181,6 +181,9 @@
             color: #aaa;
             letter-spacing: 1px;
             background-color: #fafafa;
+            position: sticky; /* 하단 문구 화면 고정 */
+            bottom: 0; /* 화면 최하단에 배치 */
+            z-index: 10; /* 스크롤 시 내용이 문구 아래로 들어가도록 설정 */
         }
 
         @media (max-width: 768px) {
@@ -193,7 +196,7 @@
             }
             .gallery-item {
                 aspect-ratio: auto;
-                height: calc((100vh - 120px) / 3); 
+                height: calc((100vh - 210px) / 3); /* 고정된 하단 영역 높이를 반영하여 사진 6장이 꽉 차도록 재계산 */
             }
             .text-content { padding: 30px 10px; }
         }
