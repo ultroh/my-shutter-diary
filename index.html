@@ -19,7 +19,7 @@
             color: #333;
             line-height: 1.6;
             user-select: none;
-            overflow: hidden; /* 수정1: 전체 화면 고정 */
+            overflow-y: scroll; /* 스크롤 정상 작동하도록 원복 */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -28,9 +28,11 @@
         /* [헤더] */
         header { 
             text-align: center; 
-            padding: 25px 20px 15px; /* 수정3: 상단 여백 축소 */
+            padding: 25px 20px 15px; 
             background-color: #fafafa;
-            z-index: 10;
+            position: sticky; /* 상단 메뉴 고정 */
+            top: 0; /* 최상단 위치 */
+            z-index: 10; /* 스크롤 시 사진이 메뉴 아래로 들어가도록 설정 */
         }
         
         /* 수정된 헤더 스타일 */
@@ -39,7 +41,7 @@
             font-weight: 300; 
             letter-spacing: 4px; 
             text-transform: uppercase; 
-            margin-bottom: 10px; /* 수정3: 제목과 메뉴 사이 줄간격 축소 */
+            margin-bottom: 10px; 
             display: inline-block;
             transition: color 0.4s ease; 
             cursor: pointer;
@@ -82,7 +84,6 @@
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
-            overflow-y: auto; /* 수정1: 메뉴 아래 메인 콘텐츠만 스크롤 되도록 변경 */
         }
 
         .content-section { 
@@ -183,8 +184,8 @@
         }
 
         @media (max-width: 768px) {
-            header { padding: 15px 10px 10px; } /* 수정3: 모바일 상단 여백 축소 */
-            header h1 { font-size: 6vw; letter-spacing: 2px; margin-bottom: 8px; } /* 수정3: 모바일 간격 축소 */
+            header { padding: 15px 10px 10px; } 
+            header h1 { font-size: 6vw; letter-spacing: 2px; margin-bottom: 8px; } 
             nav a { margin: 0 8px; font-size: 12px; }
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
@@ -192,7 +193,7 @@
             }
             .gallery-item {
                 aspect-ratio: auto;
-                height: calc((100vh - 120px) / 3); /* 수정1: 모바일에서 화면 기준 세로 3장(총 6장)이 꽉 차게 보이도록 높이 할당 */
+                height: calc((100vh - 120px) / 3); 
             }
             .text-content { padding: 30px 10px; }
         }
@@ -328,10 +329,12 @@
 
 
         // =========================================
-        // [수정2: 스와이프 기능 로직]
+        // [스와이프 기능 로직]
         // =========================================
         let touchstartX = 0;
+        let touchstartY = 0;
         let touchendX = 0;
+        let touchendY = 0;
         const sections = ['portfolio', 'about', 'contact'];
         let currentSectionIndex = 0;
 
@@ -339,10 +342,12 @@
 
         mainElement.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX;
+            touchstartY = e.changedTouches[0].screenY;
         }, {passive: true});
 
         mainElement.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
+            touchendY = e.changedTouches[0].screenY;
             handleGesture();
         }, {passive: true});
 
@@ -350,16 +355,20 @@
             // 라이트박스가 열려있으면 스와이프 작동안함
             if (document.getElementById('lightbox').classList.contains('active')) return;
 
-            const swipeDistance = touchendX - touchstartX;
+            const swipeDistanceX = touchendX - touchstartX;
+            const swipeDistanceY = touchendY - touchstartY;
             const threshold = 50; // 인식할 최소 스와이프 거리
 
-            if (swipeDistance < -threshold) {
+            // 위아래 스크롤 시 좌우 스와이프가 잘못 인식되지 않도록 차단
+            if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) return;
+
+            if (swipeDistanceX < -threshold) {
                 // 왼쪽으로 스와이프 (다음 메뉴)
                 if (currentSectionIndex < sections.length - 1) {
                     showSection(sections[currentSectionIndex + 1]);
                 }
             }
-            if (swipeDistance > threshold) {
+            if (swipeDistanceX > threshold) {
                 // 오른쪽으로 스와이프 (이전 메뉴)
                 if (currentSectionIndex > 0) {
                     showSection(sections[currentSectionIndex - 1]);
@@ -376,7 +385,9 @@
             const targetSection = document.getElementById(sectionId);
             targetSection.classList.add('active');
             document.getElementById('link-' + sectionId).classList.add('active');
-            mainElement.scrollTo(0, 0); // 수정1: window.scrollTo 대신 main 내부 스크롤 초기화
+            
+            // 메뉴 이동 시 화면 최상단으로 스크롤 복귀
+            window.scrollTo(0, 0); 
         }
 
         const lightbox = document.getElementById('lightbox');
