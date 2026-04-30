@@ -127,7 +127,7 @@
             }
         }
 
-        /* About & Contact 박스 (수정: 상단 잘림 현상 해결을 위해 세로 중앙 정렬 제거) */
+        /* About & Contact 박스 */
         #about.active, #contact.active {
             display: flex;
             flex-direction: column;
@@ -331,12 +331,14 @@
 
 
         // =========================================
-        // [스와이프 기능 로직]
+        // [스와이프 및 당겨서 새로고침 로직]
         // =========================================
         let touchstartX = 0;
         let touchstartY = 0;
         let touchendX = 0;
         let touchendY = 0;
+        let startScrollY = 0; // 터치 시작 시 스크롤 위치 저장
+
         const sections = ['portfolio', 'about', 'contact'];
         let currentSectionIndex = 0;
 
@@ -345,6 +347,7 @@
         mainElement.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX;
             touchstartY = e.changedTouches[0].screenY;
+            startScrollY = mainElement.scrollTop; // 현재 스크롤 위치 기록
         }, {passive: true});
 
         mainElement.addEventListener('touchend', e => {
@@ -360,8 +363,16 @@
             const swipeDistanceY = touchendY - touchstartY;
             const threshold = 50; 
 
+            // 당겨서 새로고침: 스크롤이 맨 위(0)일 때 아래로 80px 이상 크게 당기면 새로고침
+            if (startScrollY <= 0 && swipeDistanceY > 80 && Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) {
+                location.reload();
+                return; 
+            }
+
+            // 위아래 스크롤 시 좌우 스와이프 방지
             if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) return;
 
+            // 좌우 스와이프
             if (swipeDistanceX < -threshold) {
                 if (currentSectionIndex < sections.length - 1) {
                     showSection(sections[currentSectionIndex + 1]);
