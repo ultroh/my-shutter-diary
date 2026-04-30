@@ -19,24 +19,29 @@
             color: #333;
             line-height: 1.6;
             user-select: none;
-            overflow-y: scroll;
+            overflow: hidden; /* 수정1: 전체 화면 고정 */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
         /* [헤더] */
-        header { text-align: center; padding: 60px 20px 40px; }
+        header { 
+            text-align: center; 
+            padding: 25px 20px 15px; /* 수정3: 상단 여백 축소 */
+            background-color: #fafafa;
+            z-index: 10;
+        }
         
         /* 수정된 헤더 스타일 */
         header h1 {
             font-size: 26px; 
             font-weight: 300; 
-            letter-spacing: 4px; /* 기본 자간 선언 (이후 상태에서 건드리지 않음) */
+            letter-spacing: 4px; 
             text-transform: uppercase; 
-            margin-bottom: 25px;
+            margin-bottom: 10px; /* 수정3: 제목과 메뉴 사이 줄간격 축소 */
             display: inline-block;
-            transition: color 0.4s ease; /* 색상만 부드럽게 변경 */
+            transition: color 0.4s ease; 
             cursor: pointer;
             color: #333;
         }
@@ -73,7 +78,12 @@
         nav a:hover, nav a.active { color: #000; -webkit-text-stroke: 0.4px #000;}
         nav a:hover::after, nav a.active::after { width: 100%; left: 0; }
 
-        main { flex-grow: 1; display: flex; flex-direction: column; }
+        main { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; /* 수정1: 메뉴 아래 메인 콘텐츠만 스크롤 되도록 변경 */
+        }
 
         .content-section { 
             display: none; 
@@ -140,7 +150,7 @@
         }
 
         .text-content p {
-            word-break: keep-all; /* 단어 단위 줄바꿈 */
+            word-break: keep-all; 
             overflow-wrap: break-word;
             line-height: 1.8;
             color: #555;
@@ -173,12 +183,16 @@
         }
 
         @media (max-width: 768px) {
-            header { padding: 40px 10px 30px; }
-            header h1 { font-size: 6vw; letter-spacing: 2px; }
+            header { padding: 15px 10px 10px; } /* 수정3: 모바일 상단 여백 축소 */
+            header h1 { font-size: 6vw; letter-spacing: 2px; margin-bottom: 8px; } /* 수정3: 모바일 간격 축소 */
             nav a { margin: 0 8px; font-size: 12px; }
             .gallery {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
+            }
+            .gallery-item {
+                aspect-ratio: auto;
+                height: calc((100vh - 120px) / 3); /* 수정1: 모바일에서 화면 기준 세로 3장(총 6장)이 꽉 차게 보이도록 높이 할당 */
             }
             .text-content { padding: 30px 10px; }
         }
@@ -313,14 +327,56 @@
         });
 
 
+        // =========================================
+        // [수정2: 스와이프 기능 로직]
+        // =========================================
+        let touchstartX = 0;
+        let touchendX = 0;
+        const sections = ['portfolio', 'about', 'contact'];
+        let currentSectionIndex = 0;
+
+        const mainElement = document.querySelector('main');
+
+        mainElement.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        mainElement.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, {passive: true});
+
+        function handleGesture() {
+            // 라이트박스가 열려있으면 스와이프 작동안함
+            if (document.getElementById('lightbox').classList.contains('active')) return;
+
+            const swipeDistance = touchendX - touchstartX;
+            const threshold = 50; // 인식할 최소 스와이프 거리
+
+            if (swipeDistance < -threshold) {
+                // 왼쪽으로 스와이프 (다음 메뉴)
+                if (currentSectionIndex < sections.length - 1) {
+                    showSection(sections[currentSectionIndex + 1]);
+                }
+            }
+            if (swipeDistance > threshold) {
+                // 오른쪽으로 스와이프 (이전 메뉴)
+                if (currentSectionIndex > 0) {
+                    showSection(sections[currentSectionIndex - 1]);
+                }
+            }
+        }
+
+
         // [기본 기능들]
         function showSection(sectionId) {
+            currentSectionIndex = sections.indexOf(sectionId); // 클릭 시 스와이프 인덱스 동기화
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
             const targetSection = document.getElementById(sectionId);
             targetSection.classList.add('active');
             document.getElementById('link-' + sectionId).classList.add('active');
-            window.scrollTo(0, 0);
+            mainElement.scrollTo(0, 0); // 수정1: window.scrollTo 대신 main 내부 스크롤 초기화
         }
 
         const lightbox = document.getElementById('lightbox');
