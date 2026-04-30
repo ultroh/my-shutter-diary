@@ -19,10 +19,10 @@
             color: #333;
             line-height: 1.6;
             user-select: none;
-            overflow: hidden; /* 수정2: 전체 페이지 스크롤 방지 */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
-            height: 100dvh; /* 수정2: 모바일 주소창 버그 해결을 위해 100dvh 사용 */
+            height: 100dvh; 
         }
 
         /* [헤더] */
@@ -31,8 +31,8 @@
             padding: 25px 20px 15px; 
             background-color: #fafafa;
             z-index: 10; 
-            position: relative; /* 스크롤 위로 올라오도록 보장 */
-            flex-shrink: 0; /* 수정2: 화면이 좁아져도 헤더 영역 찌그러짐 방지 */
+            position: relative; 
+            flex-shrink: 0; 
         }
         
         /* 수정된 헤더 스타일 */
@@ -84,7 +84,7 @@
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
-            overflow-y: auto; /* 수정2: 오직 main 영역 안에서만 스크롤 발생 */
+            overflow-y: auto; 
         }
 
         .content-section { 
@@ -127,13 +127,11 @@
             }
         }
 
-        /* About & Contact 중앙 정렬 박스 */
+        /* About & Contact 박스 (수정: 상단 잘림 현상 해결을 위해 세로 중앙 정렬 제거) */
         #about.active, #contact.active {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            min-height: 50vh;
         }
 
         .text-content { 
@@ -177,14 +175,14 @@
 
         footer {
             text-align: center;
-            padding: 15px 20px; /* 수정1: 하단 여백 축소로 가운데 화면 확장 (기존 40px에서 15px로 변경) */
+            padding: 15px 20px; 
             font-size: 12px;
             color: #aaa;
             letter-spacing: 1px;
             background-color: #fafafa;
             z-index: 10; 
-            position: relative; /* 스크롤 위로 올라오도록 보장 */
-            flex-shrink: 0; /* 수정2: 하단 영역 찌그러짐 완벽 방지 */
+            position: relative; 
+            flex-shrink: 0; 
         }
 
         @media (max-width: 768px) {
@@ -197,7 +195,6 @@
             }
             .gallery-item {
                 aspect-ratio: auto;
-                /* 작아진 푸터 높이에 맞춰서 모바일에서 6장이 딱 맞게 들어가도록 수식 조정 */
                 height: calc((100dvh - 130px) / 3); 
             }
             .text-content { padding: 30px 10px; }
@@ -357,24 +354,20 @@
         }, {passive: true});
 
         function handleGesture() {
-            // 라이트박스가 열려있으면 스와이프 작동안함
             if (document.getElementById('lightbox').classList.contains('active')) return;
 
             const swipeDistanceX = touchendX - touchstartX;
             const swipeDistanceY = touchendY - touchstartY;
-            const threshold = 50; // 인식할 최소 스와이프 거리
+            const threshold = 50; 
 
-            // 위아래 스크롤 시 좌우 스와이프가 잘못 인식되지 않도록 차단
             if (Math.abs(swipeDistanceY) > Math.abs(swipeDistanceX)) return;
 
             if (swipeDistanceX < -threshold) {
-                // 왼쪽으로 스와이프 (다음 메뉴)
                 if (currentSectionIndex < sections.length - 1) {
                     showSection(sections[currentSectionIndex + 1]);
                 }
             }
             if (swipeDistanceX > threshold) {
-                // 오른쪽으로 스와이프 (이전 메뉴)
                 if (currentSectionIndex > 0) {
                     showSection(sections[currentSectionIndex - 1]);
                 }
@@ -384,14 +377,13 @@
 
         // [기본 기능들]
         function showSection(sectionId) {
-            currentSectionIndex = sections.indexOf(sectionId); // 클릭 시 스와이프 인덱스 동기화
+            currentSectionIndex = sections.indexOf(sectionId); 
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('nav a').forEach(link => link.classList.remove('active'));
             const targetSection = document.getElementById(sectionId);
             targetSection.classList.add('active');
             document.getElementById('link-' + sectionId).classList.add('active');
             
-            // 메뉴 이동 시 main 영역의 스크롤을 최상단으로 복귀
             mainElement.scrollTo(0, 0); 
         }
 
