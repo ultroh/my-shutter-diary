@@ -194,9 +194,10 @@
                 gap: 10px;
             }
             .gallery-item {
-                aspect-ratio: auto;
-                height: calc((100dvh - 130px) / 3); 
-            }
+    aspect-ratio: 1 / 1; /* 가로 세로 비율을 1:1로 고정 */
+    height: auto;        /* 기존에 설정된 높이 계산식을 무효화 */
+}
+
             .text-content { padding: 30px 10px; }
         }
 
