@@ -236,13 +236,23 @@
     <header>
         <h1 id="main-title" onclick="location.reload();"><b>My Shutter Diary</b></h1>
         <nav>
-            <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
             <a onclick="showSection('about')" id="link-about">ABOUT</a>
+            <a onclick="showSection('portfolio')" id="link-portfolio" class="active">PORTFOLIO</a>
             <a onclick="showSection('contact')" id="link-contact">CONTACT</a>
         </nav>
     </header>
 
     <main>
+        <section id="about" class="content-section">
+            <div class="text-content">
+                <h2>순간을 기록</h2>
+                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
+                이곳은 거창한 포트폴리오가 아닌, 매일의 시선으로 채워가는 사진 보관소입니다.<br><br>
+                내가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
+                그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
+            </div>
+        </section>
+
         <section id="portfolio" class="content-section active">
             <div class="gallery">
                 <div class="gallery-item"><img src="images/12.jpg" alt="사진 12" data-caption="Snowflake1"></div>
@@ -266,16 +276,6 @@
                 <div class="gallery-item"><img src="images/28.jpg" alt="사진 28" data-caption="비움"></div>
                 <div class="gallery-item"><img src="images/29.jpg" alt="사진 29" data-caption="Friday Night"></div>
                 <div class="gallery-item"><img src="images/25.jpg" alt="사진 25" data-caption="여행2"></div>
-            </div>
-        </section>
-
-        <section id="about" class="content-section">
-            <div class="text-content">
-                <h2>순간을 기록</h2>
-                <p>셔터를 누르면 흐르던 시간은 빛과 그림자의 형태로 멈춰 기록됩니다.<br><br>
-                이곳은 거창한 포트폴리오가 아닌, 매일의 시선으로 채워가는 사진 보관소입니다.<br><br>
-                내가 그곳에 있었고, 살아 움직였다는 사실을 증명하는 사진들<br>
-                그렇게 모인 습작으로 이루어진 에세이와 같은 공간으로 채워 나갈 예정입니다.</p>
             </div>
         </section>
 
@@ -343,8 +343,11 @@
         let touchendY = 0;
         let startScrollY = 0; // 터치 시작 시 스크롤 위치 저장
 
-        const sections = ['portfolio','about', 'contact'];
-        let currentSectionIndex = 0;
+        // 메뉴 위치가 바뀌었으므로 스와이프 배열 순서도 about -> portfolio -> contact로 변경
+        const sections = ['about', 'portfolio', 'contact'];
+        
+        // 기본 첫 페이지가 'portfolio'이므로 시작 인덱스를 1로 설정
+        let currentSectionIndex = 1;
 
         const mainElement = document.querySelector('main');
 
